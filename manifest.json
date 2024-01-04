@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "Grayscale Font Antialiasing",
+    "version": "0.1.0",
+    "description": "Removes RGB subpixel font antialiasing on webpage contents",
+    "icons": {
+        "16": "icons/favicon-16x16.png",
+        "32": "icons/favicon-32x32.png",
+        "48": "icons/favicon-48x48.png",
+        "128": "icons/favicon-128x128.png"
+    },
+    "author": "kika1492@gmail.com",
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "scripts/content-script.js"
+            ],
+            "all_frames": true
+        }
+    ]
+}
