@@ -14,16 +14,33 @@
 //
 // SPDX - License - Identifier: Apache - 2.0
 
-const root = document.documentElement;
-const rootStyles = window.getComputedStyle(root);
+const addOpacityFilterIfNotTransparent = () => {
+    const root = document.documentElement;
+    const rootStyles = window.getComputedStyle(root);
 
-const rootOpacity = rootStyles.getPropertyValue("opacity");
-const rootFilter = rootStyles.getPropertyValue("filter");
+    const rootOpacity = rootStyles.getPropertyValue("opacity");
+    const rootFilter = rootStyles.getPropertyValue("filter");
 
-const isTransparentOpacity = rootOpacity.length > 0 && parseFloat(rootOpacity) < 1.0;
-const isTransparentFilter = rootFilter.length > 0 && rootFilter.includes("opacity") && !rootFilter.includes("opacity(1)")
-const isTransparent = isTransparentOpacity || isTransparentFilter;
+    const isAppliedAlready = rootFilter.length > 0 && rootFilter.includes("opacity(1)");
 
-if (!isTransparent) {
-    root.style.filter += " opacity(1)"
+    if (isAppliedAlready) {
+        console.log("Skip applying grayscale font anti-aliasing:", root);
+        return;
+    }
+
+    const isTransparentOpacity = rootOpacity.length > 0 && parseFloat(rootOpacity) < 1.0;
+    const isTransparentFilter = rootFilter.length > 0 && rootFilter.includes("opacity") && !rootFilter.includes("opacity(1)");
+    const isTransparent = isTransparentOpacity || isTransparentFilter;
+
+    if (!isTransparent) {
+        root.style.filter += " opacity(1)";
+        console.log("Applied grayscale font anti-aliasing:", root);
+    }
 }
+
+const onInit = () => {
+    addOpacityFilterIfNotTransparent(); // first trial
+    setTimeout(addOpacityFilterIfNotTransparent, 5000); // try again after 5 seconds to make sure
+}
+
+onInit();
